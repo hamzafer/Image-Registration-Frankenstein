@@ -2,10 +2,12 @@ clc
 clear all
 close all
 
-%1. Loading and showing the reference image, without and with imref2d
-%(image reference frame)
-im_ref = imread('coin.png');
+% Activity 1
 
+% 1. Loading and showing the reference image, without and with imref2d
+% (image reference frame)
+
+im_ref = imread('coin.png');
 figure;
 imshow(im_ref);
 title('Spatial reference frame unknown');
@@ -19,7 +21,7 @@ imwrite(im_ref,"Ref.png");
 %%
 % Applying the first transformation
 
-T = [1 0 0; -0.3 1 0; 0 0 1]; %Horizontal Shearing, an affine transformation
+T = [1 0 0; -0.3 1 0; 0 0 1]; % Horizontal Shearing, an affine transformation
 Tform_aff = affine2d(T);
 [im_aff, Rtr] = imwarp(im_ref, Tform_aff);
 figure;
@@ -54,9 +56,11 @@ T2 = ([cosd(10) sind(10) 0; -sind(10) cosd(10) 0; 10 10 1]);
 Tform_rigid = affine2d(T2);
 [im_rigid, Rri] = imwarp(im_ref, Tform_rigid);
 figure;
-imshow(im_rigid, Rri);
-title("Rigid Transformation")
-imwrite(im_rigid,"Transformed_im_rigid.png");
+subplot(1,2,1);
+imshow(im_ref,Rcb_ref);title('Original image');
+subplot(1,2,2);
+imshow(im_rigid,Rri);title('Rigid Transformation');
+saveas(gcf,"Twoimages_rigid.png");
 
 
 [im_rigid, Rri] = imwarp(im_ref, Tform_rigid,'OutputView',Rcb_ref);
