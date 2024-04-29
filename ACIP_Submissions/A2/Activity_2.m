@@ -49,19 +49,20 @@ figure(3), imshow(im_aff,rt),title('Transformed image with CP extracted by SIFT 
 hold on
 plot(CPs_Matlab_t_ext_str.Location(:,1),CPs_Matlab_t_ext_str.Location(:,2),'gx','LineWidth',2); 
 
-% 4.1. Transformed (Rigid Transform)
+% Rigid Transformation
+% 3.6. Transformed
 T2 = ([cosd(10) sind(10) 0; -sind(10) cosd(10) 0; 10 10 1]);
 Tform_rigid = affine2d(T2);
 [im_rigid, Rri] = imwarp(im_orig, Tform_rigid);
 
-% 4.2. Feature detection and extraction
+% 3.7. Feature detection and extraction
 CPs_Matlab_t_det_rig = detectSIFTFeatures(im_rigid); % Rigid Transformation
 [CPs_Matlab_t_feat_rig, CPs_Matlab_t_ext_rig] = extractFeatures(im_rigid,  CPs_Matlab_t_det_rig);
 
-% 4.3. Select the strongest CPs (within availability)
+% 3.8. Select the strongest CPs (within availability)
 CPs_Matlab_t_ext_str_rig=CPs_Matlab_t_ext_rig.selectStrongest(target_n);
 
-% 4.4. Show the final selected set
+% 3.9. Show the final selected set
 figure(4), imshow(im_rigid,Rri),title('Transformed image with CP extracted by SIFT | Rigid')
 hold on
 plot(CPs_Matlab_t_ext_str_rig.Location(:,1),CPs_Matlab_t_ext_str_rig.Location(:,2),'gx','LineWidth',2); 
@@ -148,6 +149,7 @@ CPs_SURF_orig_ext_str = CPs_SURF_orig_ext.selectStrongest(target_n);
 figure, imshow(im_orig, rc), title('Original image with CP extracted by SURF');
 hold on;
 plot(CPs_SURF_orig_ext_str.Location(:,1), CPs_SURF_orig_ext_str.Location(:,2), 'bx', 'LineWidth', 2);
+
 %%
 % SURF: Transformed Image
 CPs_SURF_t_det = detectSURFFeatures(im_rigid);
