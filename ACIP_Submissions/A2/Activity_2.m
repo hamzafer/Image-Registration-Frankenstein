@@ -78,35 +78,53 @@ hold on, plot(CPs_Matlab_t_ext_str_rig.Location(:,1),CPs_Matlab_t_ext_str_rig.Lo
 title('CP set extracted after transform');
  
 
-%% Step 5. Repeat the process with the BRISK
-% Repeating everything for the second transformation
+%% Step 5. BRISK Feature Detection and Extraction
 
 % Original Image
+% 5.1 Detect BRISK Features on Original Image
 CPs_Matlab_orig_det = detectBRISKFeatures(im_orig);
 
-% Feature extraction
+% 5.2 Extract Features from Original Image
 [CPs_Matlab_orig_feat, CPs_Matlab_orig_ext] = extractFeatures(im_orig, CPs_Matlab_orig_det);
 
-% You might want to reduce the number of CPs to around 50, if you have more than this number
-target_n = 100; 
+% 5.3 Select the strongest CPs (targeting 60 as with SIFT)
+target_n = 60; 
 CPs_Matlab_orig_ext_str_br = CPs_Matlab_orig_ext.selectStrongest(target_n);
 
-% Plot extracted CPs along with the coin image
-figure(6), imshow(im_orig,rc),title('Original image with CP extracted by BRISK')
+% 5.4 Plot extracted CPs along with the original coin image
+figure(6), imshow(im_orig,rc), title('Original image with CP extracted by BRISK')
 hold on
-plot(CPs_Matlab_orig_ext_str_br.Location(:,1),CPs_Matlab_orig_ext_str_br.Location(:,2),'bx','LineWidth',2); 
+plot(CPs_Matlab_orig_ext_str_br.Location(:,1), CPs_Matlab_orig_ext_str_br.Location(:,2), 'bx', 'LineWidth',2);
 
-% Feature detection and extraction
-CPs_Matlab_t_det2 = detectBRISKFeatures(im_rigid);
-[CPs_Matlab_t_feat2,  CPs_Matlab_t_ext2] = extractFeatures(im_rigid,  CPs_Matlab_t_det2);
+% Sheared Transformation
+% 5.5 Detect BRISK Features on Sheared Image
+CPs_Matlab_t_det_br_shear = detectBRISKFeatures(im_aff);
 
-% Select the strongest CPs (within availability)
-CPs_Matlab_t_ext_str2=CPs_Matlab_t_ext2.selectStrongest(target_n);
+% 5.6 Extract Features from Sheared Image
+[CPs_Matlab_t_feat_br_shear, CPs_Matlab_t_ext_br_shear] = extractFeatures(im_aff, CPs_Matlab_t_det_br_shear);
 
-% Show the final selected set
-figure(7), imshow(im_rigid,Rri),title('Transformed image with CP extracted by BRISK')
+% 5.7 Select the strongest CPs for Sheared Image
+CPs_Matlab_t_ext_str_br_shear = CPs_Matlab_t_ext_br_shear.selectStrongest(target_n);
+
+% 5.8 Show the final selected set on sheared transformed image
+figure(7), imshow(im_aff, rt), title('Transformed image with CP extracted by BRISK | Horizontal Shearing')
 hold on
-plot(CPs_Matlab_t_ext_str2.Location(:,1),CPs_Matlab_t_ext_str2.Location(:,2),'gx','LineWidth',2); 
+plot(CPs_Matlab_t_ext_str_br_shear.Location(:,1), CPs_Matlab_t_ext_str_br_shear.Location(:,2), 'gx', 'LineWidth',2);
+
+% Rigid Transformation
+% 5.9 Detect BRISK Features on Rigidly Transformed Image
+CPs_Matlab_t_det_br_rigid = detectBRISKFeatures(im_rigid);
+
+% 5.10 Extract Features from Rigidly Transformed Image
+[CPs_Matlab_t_feat_br_rigid, CPs_Matlab_t_ext_br_rigid] = extractFeatures(im_rigid, CPs_Matlab_t_det_br_rigid);
+
+% 5.11 Select the strongest CPs for Rigidly Transformed Image
+CPs_Matlab_t_ext_str_br_rigid = CPs_Matlab_t_ext_br_rigid.selectStrongest(target_n);
+
+% 5.12 Show the final selected set on rigidly transformed image
+figure(8), imshow(im_rigid, Rri), title('Transformed image with CP extracted by BRISK | Rigid')
+hold on
+plot(CPs_Matlab_t_ext_str_br_rigid.Location(:,1), CPs_Matlab_t_ext_str_br_rigid.Location(:,2), 'gx', 'LineWidth',2);
 
 %% Step 6. Comparison between the two CP distributions
 figure(8), subplot(1,2,1); 
@@ -119,7 +137,7 @@ imshow(im_rigid,Rri);
 hold on, plot(CPs_Matlab_t_ext_str2.Location(:,1),CPs_Matlab_t_ext_str2.Location(:,2),'gx','LineWidth',2);
 title('CP set extracted after transform');
 
-%% Other methods:
+%% Other methods for comparisons:
 
 % SURF: Original Image
 CPs_SURF_orig_det = detectSURFFeatures(im_orig);
