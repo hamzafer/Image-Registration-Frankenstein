@@ -127,16 +127,18 @@ figure(8), imshow(im_rigid, Rri), title('Transformed image with CP extracted by 
 hold on
 plot(CPs_Matlab_t_ext_str_br_rigid.Location(:,1), CPs_Matlab_t_ext_str_br_rigid.Location(:,2), 'gx', 'LineWidth',2);
 
-%% Step 6. Comparison between the two CP distributions
-figure(8), subplot(1,2,1); 
-imshow(im_orig,rc)
-hold on
-plot(CPs_Matlab_orig_ext_str_br.Location(:,1),CPs_Matlab_orig_ext_str_br.Location(:,2),'bx','LineWidth',2);
-title('Original CP set | BRISK');
+%% Step 6. Comparison between the two CP distributions using BRISK
+figure(8), subplot(1,2,1);
+imshow(im_orig,rc); % Display the original image
+hold on;
+plot(CPs_Matlab_orig_ext_str_br.Location(:,1), CPs_Matlab_orig_ext_str_br.Location(:,2), 'bx', 'LineWidth',2);
+title('Original CP set | BRISK'); % Title for original image keypoints
+
 subplot(1,2,2);
-imshow(im_rigid,Rri);
-hold on, plot(CPs_Matlab_t_ext_str2.Location(:,1),CPs_Matlab_t_ext_str2.Location(:,2),'gx','LineWidth',2);
-title('CP set extracted after transform');
+imshow(im_rigid, Rri); % Display the rigidly transformed image
+hold on;
+plot(CPs_Matlab_t_ext_str_br_rigid.Location(:,1), CPs_Matlab_t_ext_str_br_rigid.Location(:,2), 'gx', 'LineWidth',2);
+title('CP set extracted after rigid transform | BRISK'); % Corrected title to specify transformation
 
 %% Other methods for comparisons:
 
