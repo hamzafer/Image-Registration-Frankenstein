@@ -118,3 +118,204 @@ subplot(1,2,2);
 imshow(im_rigid,Rri);
 hold on, plot(CPs_Matlab_t_ext_str2.Location(:,1),CPs_Matlab_t_ext_str2.Location(:,2),'gx','LineWidth',2);
 title('CP set extracted after transform');
+
+%% Other methods:
+
+% SURF: Original Image
+CPs_SURF_orig_det = detectSURFFeatures(im_orig);
+[CPs_SURF_orig_feat, CPs_SURF_orig_ext] = extractFeatures(im_orig, CPs_SURF_orig_det);
+CPs_SURF_orig_ext_str = CPs_SURF_orig_ext.selectStrongest(target_n);
+
+% Plotting for the original image
+figure, imshow(im_orig, rc), title('Original image with CP extracted by SURF');
+hold on;
+plot(CPs_SURF_orig_ext_str.Location(:,1), CPs_SURF_orig_ext_str.Location(:,2), 'bx', 'LineWidth', 2);
+%%
+% SURF: Transformed Image
+CPs_SURF_t_det = detectSURFFeatures(im_rigid);
+[CPs_SURF_t_feat, CPs_SURF_t_ext] = extractFeatures(im_rigid, CPs_SURF_t_det);
+CPs_SURF_t_ext_str = CPs_SURF_t_ext.selectStrongest(target_n);
+
+% Plotting for the transformed image
+figure, imshow(im_rigid, Rri), title('Transformed image with CP extracted by SURF');
+hold on;
+plot(CPs_SURF_t_ext_str.Location(:,1), CPs_SURF_t_ext_str.Location(:,2), 'gx', 'LineWidth', 2);
+
+%% Comparison between the two CP distributions for SURF
+figure(9), subplot(1,2,1); 
+imshow(im_orig,rc)
+hold on
+plot(CPs_SURF_orig_ext_str.Location(:,1), CPs_SURF_orig_ext_str.Location(:,2), 'bx', 'LineWidth', 2);
+title('Original CP set | SURF');
+subplot(1,2,2);
+imshow(im_rigid,Rri);
+hold on, plot(CPs_SURF_t_ext_str.Location(:,1), CPs_SURF_t_ext_str.Location(:,2), 'gx', 'LineWidth', 2);
+title('CP set extracted after transform | SURF');
+
+%%
+% MSER: Original Image
+CPs_MSER_orig_det = detectMSERFeatures(im_orig);
+[CPs_MSER_orig_feat, CPs_MSER_orig_ext] = extractFeatures(im_orig, CPs_MSER_orig_det);
+CPs_MSER_orig_ext_str = CPs_MSER_orig_ext.selectStrongest(target_n);
+
+% Plotting for the original image
+figure, imshow(im_orig, rc), title('Original image with CP extracted by MSER');
+hold on;
+plot(CPs_MSER_orig_ext_str.Location(:,1), CPs_MSER_orig_ext_str.Location(:,2), 'bx', 'LineWidth', 2);
+
+%%
+% MSER: Transformed Image
+CPs_MSER_t_det = detectMSERFeatures(im_rigid);
+[CPs_MSER_t_feat, CPs_MSER_t_ext] = extractFeatures(im_rigid, CPs_MSER_t_det);
+CPs_MSER_t_ext_str = CPs_MSER_t_ext.selectStrongest(target_n);
+
+% Plotting for the transformed image
+figure, imshow(im_rigid, Rri), title('Transformed image with CP extracted by MSER');
+hold on;
+plot(CPs_MSER_t_ext_str.Location(:,1), CPs_MSER_t_ext_str.Location(:,2), 'gx', 'LineWidth', 2);
+
+%% Comparison between the two CP distributions for MSER
+figure(10), subplot(1,2,1); 
+imshow(im_orig,rc)
+hold on
+plot(CPs_MSER_orig_ext_str.Location(:,1), CPs_MSER_orig_ext_str.Location(:,2), 'bx', 'LineWidth', 2);
+title('Original CP set | MSER');
+subplot(1,2,2);
+imshow(im_rigid,Rri);
+hold on, plot(CPs_MSER_t_ext_str.Location(:,1), CPs_MSER_t_ext_str.Location(:,2), 'gx', 'LineWidth', 2);
+title('CP set extracted after transform | MSER');
+
+%% 
+% FAST: Original Image
+CPs_FAST_orig_det = detectFASTFeatures(im_orig);
+[CPs_FAST_orig_feat, CPs_FAST_orig_ext] = extractFeatures(im_orig, CPs_FAST_orig_det);
+CPs_FAST_orig_ext_str = CPs_FAST_orig_ext.selectStrongest(target_n);
+
+% Plotting for the original image
+figure, imshow(im_orig, rc), title('Original image with CP extracted by FAST');
+hold on;
+plot(CPs_FAST_orig_ext_str.Location(:,1), CPs_FAST_orig_ext_str.Location(:,2), 'bx', 'LineWidth', 2);
+
+%%
+% FAST: Transformed Image
+CPs_FAST_t_det = detectFASTFeatures(im_rigid);
+[CPs_FAST_t_feat, CPs_FAST_t_ext] = extractFeatures(im_rigid, CPs_FAST_t_det);
+CPs_FAST_t_ext_str = CPs_FAST_t_ext.selectStrongest(target_n);
+
+% Plotting for the transformed image
+figure, imshow(im_rigid, Rri), title('Transformed image with CP extracted by FAST');
+hold on;
+plot(CPs_FAST_t_ext_str.Location(:,1), CPs_FAST_t_ext_str.Location(:,2), 'gx', 'LineWidth', 2);
+
+%% Comparison between the two CP distributions for FAST
+figure(11), subplot(1,2,1); 
+imshow(im_orig,rc)
+hold on
+plot(CPs_FAST_orig_ext_str.Location(:,1), CPs_FAST_orig_ext_str.Location(:,2), 'bx', 'LineWidth', 2);
+title('Original CP set | FAST');
+subplot(1,2,2);
+imshow(im_rigid,Rri);
+hold on, plot(CPs_FAST_t_ext_str.Location(:,1), CPs_FAST_t_ext_str.Location(:,2), 'gx', 'LineWidth', 2);
+title('CP set extracted after transform | FAST');
+
+%% 
+% MinEigen: Original Image
+CPs_MinEigen_orig_det = detectMinEigenFeatures(im_orig);
+[CPs_MinEigen_orig_feat, CPs_MinEigen_orig_ext] = extractFeatures(im_orig, CPs_MinEigen_orig_det);
+CPs_MinEigen_orig_ext_str = CPs_MinEigen_orig_ext.selectStrongest(target_n);
+
+% Plotting for the original image
+figure, imshow(im_orig, rc), title('Original image with CP extracted by MinEigen');
+hold on;
+plot(CPs_MinEigen_orig_ext_str.Location(:,1), CPs_MinEigen_orig_ext_str.Location(:,2), 'bx', 'LineWidth', 2);
+
+%%
+% MinEigen: Transformed Image
+CPs_MinEigen_t_det = detectMinEigenFeatures(im_rigid);
+[CPs_MinEigen_t_feat, CPs_MinEigen_t_ext] = extractFeatures(im_rigid, CPs_MinEigen_t_det);
+CPs_MinEigen_t_ext_str = CPs_MinEigen_t_ext.selectStrongest(target_n);
+
+% Plotting for the transformed image
+figure, imshow(im_rigid, Rri), title('Transformed image with CP extracted by MinEigen');
+hold on;
+plot(CPs_MinEigen_t_ext_str.Location(:,1), CPs_MinEigen_t_ext_str.Location(:,2), 'gx', 'LineWidth', 2);
+
+%% Comparison between the two CP distributions for MinEigen
+figure(12), subplot(1,2,1); 
+imshow(im_orig,rc)
+hold on
+plot(CPs_MinEigen_orig_ext_str.Location(:,1), CPs_MinEigen_orig_ext_str.Location(:,2), 'bx', 'LineWidth', 2);
+title('Original CP set | MinEigen');
+subplot(1,2,2);
+imshow(im_rigid,Rri);
+hold on, plot(CPs_MinEigen_t_ext_str.Location(:,1), CPs_MinEigen_t_ext_str.Location(:,2), 'gx', 'LineWidth', 2);
+title('CP set extracted after transform | MinEigen');
+
+%%
+% Harris: Original Image
+CPs_Harris_orig_det = detectHarrisFeatures(im_orig);
+[CPs_Harris_orig_feat, CPs_Harris_orig_ext] = extractFeatures(im_orig, CPs_Harris_orig_det);
+CPs_Harris_orig_ext_str = CPs_Harris_orig_ext.selectStrongest(target_n);
+
+% Plotting for the original image
+figure, imshow(im_orig, rc), title('Original image with CP extracted by Harris');
+hold on;
+plot(CPs_Harris_orig_ext_str.Location(:,1), CPs_Harris_orig_ext_str.Location(:,2), 'bx', 'LineWidth', 2);
+
+%%
+% Harris: Transformed Image
+CPs_Harris_t_det = detectHarrisFeatures(im_rigid);
+[CPs_Harris_t_feat, CPs_Harris_t_ext] = extractFeatures(im_rigid, CPs_Harris_t_det);
+CPs_Harris_t_ext_str = CPs_Harris_t_ext.selectStrongest(target_n);
+
+% Plotting for the transformed image
+figure, imshow(im_rigid, Rri), title('Transformed image with CP extracted by Harris');
+hold on;
+plot(CPs_Harris_t_ext_str.Location(:,1), CPs_Harris_t_ext_str.Location(:,2), 'gx', 'LineWidth', 2);
+
+%% Comparison between the two CP distributions for Harris
+figure(13), subplot(1,2,1); 
+imshow(im_orig,rc)
+hold on
+plot(CPs_Harris_orig_ext_str.Location(:,1), CPs_Harris_orig_ext_str.Location(:,2), 'bx', 'LineWidth', 2);
+title('Original CP set | Harris');
+subplot(1,2,2);
+imshow(im_rigid,Rri);
+hold on, plot(CPs_Harris_t_ext_str.Location(:,1), CPs_Harris_t_ext_str.Location(:,2), 'gx', 'LineWidth', 2);
+title('CP set extracted after transform | Harris');
+
+%%
+% ORB-like Algorithm
+% Detect FAST keypoints
+CPs_ORB_orig_det = detectFASTFeatures(im_orig);
+
+% Extract BRIEF (Binary Robust Independent Elementary Features) descriptors
+[CPs_ORB_orig_feat, CPs_ORB_orig_ext] = extractFeatures(im_orig, CPs_ORB_orig_det, 'Method', 'Block', 'BlockSize', 31);
+CPs_ORB_orig_ext_str = CPs_ORB_orig_ext.selectStrongest(target_n);
+
+% Plotting for the original image
+figure, imshow(im_orig, rc), title('Original image with ORB-like CP extracted');
+hold on;
+plot(CPs_ORB_orig_ext_str.Location(:,1), CPs_ORB_orig_ext_str.Location(:,2), 'bx', 'LineWidth', 2);
+
+%%
+% ORB-like: Transformed Image
+CPs_ORB_t_det = detectFASTFeatures(im_rigid);
+[CPs_ORB_t_feat, CPs_ORB_t_ext] = extractFeatures(im_rigid, CPs_ORB_t_det, 'Method', 'Block', 'BlockSize', 31);
+CPs_ORB_t_ext_str = CPs_ORB_t_ext.selectStrongest(target_n);
+
+% Plotting for the transformed image
+figure, imshow(im_rigid, Rri), title('Transformed image with ORB-like CP extracted');
+hold on;
+plot(CPs_ORB_t_ext_str.Location(:,1), CPs_ORB_t_ext_str.Location(:,2), 'gx', 'LineWidth', 2);
+
+%% Comparison between the two CP distributions for ORB-like
+figure(14), subplot(1,2,1); 
+imshow(im_orig,rc)
+hold on
+plot(CPs_ORB_orig_ext_str.Location(:,1), CPs_ORB_orig_ext_str.Location(:,2), 'bx', 'LineWidth', 2);
+title('Original CP set | ORB-like');
+subplot(1,2,2);
+imshow(im_rigid,Rri);
+hold on, plot(CPs_ORB_t_ext_str.Location(:,1), CPs_ORB_t_ext_str.Location(:,2), 'gx', 'LineWidth', 2);
+title('CP set extracted after transform | ORB-like');
