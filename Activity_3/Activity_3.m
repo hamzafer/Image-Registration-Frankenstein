@@ -1,4 +1,4 @@
-% Class exercise 3. SOLUTION
+% Class exercise 3
 clc
 clear all
 close all
@@ -14,7 +14,7 @@ rt = imref2d(size(im_t));
 CPs_Matlab_t_det= detectSIFTFeatures(im_t);
 [CPs_Matlab_t_feat,  CPs_Matlab_t_ext]  = extractFeatures(im_t,  CPs_Matlab_t_det);
 
-%% Step 2. Match the two sets using the matchFeatures function. Read the function documentation first
+%% Step 2. Match the two sets using the matchFeatures function.
 
 % Note that the inputs are the feature values, not the CPs_extracted sets;
 % We keep all the CPs extracted, since this is beneficial for having more matched candidates
@@ -29,11 +29,11 @@ showMatchedFeatures(im_orig, im_t, matched_set_ref, matched_set_sen, 'montage','
 title(ax, 'Candidate point matches');
 legend(ax, 'Matched points Ref','Matched points Sensed');
 
-% Not satisfied. seems like two pairs are not correct and we have crossings
+% We are not satisfied with the matching. Seems like two pairs are not correct and we have crossings
 %% Step 4. Matching process parameter tuning
-% Change any of these parameters: Matchthreshold, Maxratio, Metric (see
-% function documentation for available values)
-[indexPairs,matchmetric] = matchFeatures(CPs_Matlab_orig_feat, CPs_Matlab_t_feat,'Unique',true,'MaxRatio',0.5);
+% Change any of these parameters: Matchthreshold, Maxratio, Metric, we use
+% maratio, which its defult is 0.6
+[indexPairs,matchmetric] = matchFeatures(CPs_Matlab_orig_feat, CPs_Matlab_t_feat,'Unique',true,'MaxRatio',0.4);
 
 matched_set_ref=CPs_Matlab_orig_ext(indexPairs(:,1));
 matched_set_sen=CPs_Matlab_t_ext(indexPairs(:,2));
@@ -44,15 +44,9 @@ showMatchedFeatures(im_orig, im_t, matched_set_ref, matched_set_sen,'montage','P
 title(ax, 'Candidate point matches with refined parameters');
 legend(ax, 'Matched points Ref','Matched points Sensed');
 
-%you can also remove outliers
-% [tform,inlierIdx] = estimateGeometricTransform2D(matchedPtsDistorted,matchedPtsOriginal,'similarity');
-% inlierPtsDistorted = matchedPtsDistorted(inlierIdx,:);
-% inlierPtsOriginal  = matchedPtsOriginal(inlierIdx,:);
-
 
 %%
-
-%repeat everything for the second transformation
+%Repeat everything for the second transformation
 im_orig=imread('coin.png'); 
 rc = imref2d(size(im_orig));
 CPs_Matlab_orig_det = detectBRISKFeatures(im_orig);
@@ -74,9 +68,9 @@ title(ax, 'Candidate point matches');
 legend(ax, 'Matched points Ref','Matched points Sensed');
 
 %%
-% fine tuning
+% Fine tuning
 
-[indexPairs,~] = matchFeatures(CPs_Matlab_orig_feat, CPs_Matlab_t_feat2,'Unique',true,'MaxRatio',0.6);
+[indexPairs,~] = matchFeatures(CPs_Matlab_orig_feat, CPs_Matlab_t_feat2,'Unique',true,'MaxRatio',0.5);
 
 matched_set_ref=CPs_Matlab_orig_ext(indexPairs(:,1));
 matched_set_sen=CPs_Matlab_t_ext2(indexPairs(:,2));
