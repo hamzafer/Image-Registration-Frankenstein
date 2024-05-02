@@ -33,6 +33,9 @@ im_reg = imwarp(im_t, tform_est, 'OutputView', outputView);
 figure, imshowpair(im_orig, im_reg, "falsecolor");
 title("Overlap of Original and Registered Images Using SIFT and Shearing Transformation")
 
+% Save figure
+set(gcf, 'Position', [100, 100, 800, 600]);
+print('shear_registration','-dpng','-r300');
 %% Step 5. If the result does not look satisfactory, try one or several of the following approaches:
 
 % The results look satisfactory
@@ -64,3 +67,7 @@ im_reg2 = imwarp(im_rigid, tform_est2, 'OutputView', outputView);
 
 figure, imshowpair(im_orig, im_reg2, "falsecolor");
 title("Overlap of Original and Registered Images Using SIFT and Rigid Transformation")
+
+% Save figure
+set(gcf, 'Position', [100, 100, 800, 600]);
+print('rigid_registration','-dpng','-r300');
