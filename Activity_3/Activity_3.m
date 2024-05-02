@@ -2,6 +2,7 @@
 clc
 clear all
 close all
+
 %% Transformation 1 - SIFT
 % Step 1. Execute your Activity 2 code, and get the CP sets for the reference and sensed images (full set, no CP reduction)
 % a) Read image and show it
@@ -118,7 +119,7 @@ for i = 1:length(MaxRatios)
     disp(['Standard Deviation of Scores = ', num2str(stdScore)]);
 end
 
-%% Second Transformation - SIFT
+%% Transformation 2 - SIFT
 im_orig=imread('coin.png'); 
 rc = imref2d(size(im_orig));
 CPs_Matlab_orig_det = detectSIFTFeatures(im_orig);
@@ -167,7 +168,7 @@ for i = 1:length(MaxRatios)
     disp(['Standard Deviation of Scores = ', num2str(stdScore)]);
 end
 
-%% Second Transformation - BRISK
+%% Transformation 2 - BRISK
 
 im_orig=imread('coin.png'); 
 rc = imref2d(size(im_orig));
@@ -216,3 +217,4 @@ for i = 1:length(MaxRatios)
     disp(['Median Score = ', num2str(medianScore)]);
     disp(['Standard Deviation of Scores = ', num2str(stdScore)]);
 end
+
