@@ -31,7 +31,7 @@ im_reg = imwarp(im_t, tform_est, 'OutputView', outputView);
 
 %% Step 4. Show the overlap plot of the original and registered images, and visually evaluate the result
 figure, imshowpair(im_orig, im_reg, "falsecolor");
-title("Overlap of the Original and Registered image")
+title("Overlap of Original and Registered Images Using SIFT and Shearing Transformation")
 
 %% Step 5. If the result does not look satisfactory, try one or several of the following approaches:
 
@@ -63,4 +63,4 @@ outputView = imref2d(size(im_orig));
 im_reg2 = imwarp(im_rigid, tform_est2, 'OutputView', outputView);
 
 figure, imshowpair(im_orig, im_reg2, "falsecolor");
-title("Overlap of the Original and Registered image")
+title("Overlap of Original and Registered Images Using SIFT and Rigid Transformation")
