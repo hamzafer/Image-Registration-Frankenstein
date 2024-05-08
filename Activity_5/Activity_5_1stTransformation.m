@@ -1,8 +1,10 @@
-% Class exercise 5.
+% Class exercise 5. - Shear Transform
 clear all 
 clc
 %% Step 1. Execute your Activity 4 code, and get the original and registered images with the best solution you have been able to find
-im_orig=imread('coin.png'); 
+%im_orig=imread('coin.png'); 
+im_orig=imread('catt_matlab.jpg'); 
+im_orig = rgb2gray(im_orig); % additional
 rc = imref2d(size(im_orig));
 CPs_Matlab_orig_det = detectSIFTFeatures(im_orig);
 [CPs_Matlab_orig_feat,  CPs_Matlab_orig_ext]  = extractFeatures(im_orig, CPs_Matlab_orig_det);
@@ -167,7 +169,26 @@ Max_vertical_displacement = max(abs(diff(:, 2)));
 % and geometric alignment. The control point-based metrics verify the reliability 
 % of the image registration solution, meaning our "Frankenstein" is likely to thrive.
 
+%% Print variables:
 
+disp('-> Step 1: Load images and perform initial SIFT feature detection and matching');
+fprintf('Number of original image SIFT points: %d\n', CPs_Matlab_orig_det.Count);
+fprintf('Number of transformed image SIFT points: %d\n', CPs_Matlab_t_det.Count);
+fprintf('Number of matched pairs: %d\n\n', size(indexPairs, 1));
 
+disp('Step 2: Compute RMSE for SIFT');
+fprintf('RMSE value: %f\n', RMSE_SIFT);
+fprintf('Relative RMSE value: %f\n\n', RMSE_rel_SIFT);
 
+disp('-> Step 3: SURF feature detection and matching');
+fprintf('Number of SURF points in original image: %d\n', CPs_eval_ref.Count);
+fprintf('Number of SURF points in registered image: %d\n', CPs_eval_reg.Count);
+fprintf('Number of matched SURF pairs: %d\n\n', size(indexPairs, 1));
 
+disp('Computed location errors:');
+fprintf('Average Euclidean distance error: %f\n', CP_Loc_error_euclidean);
+fprintf('Mean residual error (x-axis): %f\n', CP_Loc_error_residualx);
+fprintf('Mean residual error (y-axis): %f\n\n', CP_Loc_error_residualy);
+
+fprintf('Maximum horizontal displacement: %f pixels\n', Max_horizontal_displacement);
+fprintf('Maximum vertical displacement: %f pixels\n', Max_vertical_displacement);

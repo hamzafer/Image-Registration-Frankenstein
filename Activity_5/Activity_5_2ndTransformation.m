@@ -1,8 +1,10 @@
-% Class exercise 5. Transformation 2
+% Class exercise 5. Transformation 2 - Rigid Transform
 clear all
 clc
 %% Step 1. Execute your Activity 4 code, and get the original and registered images with the best solution you have been able to find
-im_orig=imread('coin.png'); 
+%im_orig=imread('coin.png'); 
+im_orig=imread('catt_matlab.jpg'); 
+im_orig = rgb2gray(im_orig); % additional
 rc = imref2d(size(im_orig));
 CPs_Matlab_orig_det = detectSIFTFeatures(im_orig);
 [CPs_Matlab_orig_feat,  CPs_Matlab_orig_ext]  = extractFeatures(im_orig, CPs_Matlab_orig_det);
@@ -109,3 +111,17 @@ Max_vertical_displacement = max(abs(diff(:, 2)));
 % A vertical displacement of 1.6810 is also quite small, similar to the horizontal displacement. 
 % This shows that the registration aligns the points well in the vertical direction.
 
+%% Print variables:
+
+% Print statements for RMSE and relative RMSE values
+fprintf('RMSE_SIFT: %f\n', RMSE_SIFT);
+fprintf('Relative RMSE (SIFT): %f\n\n', RMSE_rel_SIFT);
+
+% Print statements for CP location errors
+fprintf('CP Location Error: %f\n', CP_Loc_error);
+fprintf('CP Location Error Residual X: %f\n', CP_Loc_error_residualx);
+fprintf('CP Location Error Residual Y: %f\n\n', CP_Loc_error_residualy);
+
+% Print statements for maximum displacements
+fprintf('Maximum Horizontal Displacement: %f\n', Max_horizontal_displacement);
+fprintf('Maximum Vertical Displacement: %f\n', Max_vertical_displacement);
