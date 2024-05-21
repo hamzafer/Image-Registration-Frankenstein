@@ -6,8 +6,8 @@ im4ref=imread('im4_ref.jpg');
 im4sen=imread('im4_sen.jpg');
 
 % Convert to grayscale if they are RGB
-fixed = rgb2gray(im4ref); 
-moving = rgb2gray(im4sen);
+fixed = im4ref(:,:,1); 
+moving = im4sen(:,:,1);
 
 % b) Show the initial misalignment problem using imshowpair function
 figure, imshowpair(fixed, moving, 'montage'), title('Initial Misalignment');
@@ -20,7 +20,7 @@ ptsMoving = detectSURFFeatures(moving);
 [featuresMoving, validPtsMoving] = extractFeatures(moving, ptsMoving);
 
 % d) Match features
-[indexPairs,matchmetric] = matchFeatures(featuresFixed, featuresMoving, 'Unique',true,'MaxRatio',0.55);
+[indexPairs,matchmetric] = matchFeatures(featuresFixed, featuresMoving, 'Unique',true,'MaxRatio',0.4);
 matched_set_ref=validPtsFixed(indexPairs(:,1));
 matched_set_reg=validPtsMoving(indexPairs(:,2));
 
@@ -77,7 +77,7 @@ CPs_eval_reg = detectKAZEFeatures(movingRegistered);
 [CPs_eval_ref_feat,  CPs_eval_ref_ext]  = extractFeatures(fixed,  CPs_eval_ref);
 [CPs_eval_reg_feat,  CPs_eval_reg_ext]  = extractFeatures(movingRegistered,  CPs_eval_reg);
 
-[indexPairs,matchmetric] = matchFeatures(CPs_eval_ref_feat, CPs_eval_reg_feat, 'Unique',true,'MaxRatio',0.4);
+[indexPairs,matchmetric] = matchFeatures(CPs_eval_ref_feat, CPs_eval_reg_feat, 'Unique',true,'MaxRatio',0.3);
 matched_set_ref=CPs_eval_ref_ext(indexPairs(:,1));
 matched_set_reg=CPs_eval_reg_ext(indexPairs(:,2));
 
