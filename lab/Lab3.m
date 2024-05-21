@@ -1,5 +1,6 @@
 %% Case 3. HARD
-
+clear all
+clc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % a) Load images
 im3ref=imread('im3_ref.jpg');
@@ -60,8 +61,11 @@ RMSE_rel=RMSE/255;
 %e2) Discuss an alternative for evaluating the registration quality using manually extracted key points in both 
 %original and registered images (10 key points, for instance)
 
-cpselect(moving_reg,fixed);
-save 'CP_manual_proj_case3.mat' fixedPoints movingPoints;
+% Manually select control points for accuracy evaluation
+% cpselect(moving_reg,fixed);
+% save 'CP_manual_proj_case3.mat' fixedPoints movingPoints;
+%%
+load 'CP_manual_proj_case3.mat'
 %%
 %Compute the average euclidean distance between original and registered image's key
 %points. 
