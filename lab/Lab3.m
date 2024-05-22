@@ -144,6 +144,3 @@ if exist('ssimval', 'var')
     fprintf('SSIM Index: %f\n', ssimval);
 end
 fprintf('----------------------------------------\n');
-
-
-
