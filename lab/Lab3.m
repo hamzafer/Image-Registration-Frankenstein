@@ -58,6 +58,15 @@ RMSE = sqrt((1/(-1+length(pix_orig)))*sum((pix_orig-pix_reg).^2));
 RMSE_rel=RMSE/255;
 
 %%
+% Calculate Euclidean distance for matched features
+transformedPoints = transformPointsForward(tform2, matchedmov.Location);
+differences = matchedfixed.Location - transformedPoints;
+distances = sqrt(sum(differences.^2, 2));
+averageDistance = mean(distances);
+%%
+% SSIM Calculation
+[ssimval, ssimmap] = ssim(moving_reg, fixed);
+%%
 %e2) Discuss an alternative for evaluating the registration quality using manually extracted key points in both 
 %original and registered images (10 key points, for instance)
 
@@ -119,6 +128,22 @@ title(ax, "Original and Registered CP locations")
 %or not. Try to explain the differences found between the three evaluation
 %alternatives tested
 
+%%
+% Print section
+fprintf('\n--- Registration Evaluation Metrics ---\n');
+fprintf('RMSE: %f\n', RMSE);
+fprintf('Relative RMSE (Normalized to 255): %f\n', RMSE_rel);
+fprintf('Average Euclidean distance for method SIFT: %f pixels\n', averageDistance);
+fprintf('SSIM for Current Method: %f\n', ssimval);
+
+fprintf('Average Euclidean distance (manual CPs): %f pixels\n', acc_projc3);
+fprintf('Average Euclidean distance (auto CPs): %f pixels\n', CP_Loc_error_euclidean);
+
+% Optionally print SSIM if you have implemented it
+if exist('ssimval', 'var')
+    fprintf('SSIM Index: %f\n', ssimval);
+end
+fprintf('----------------------------------------\n');
 
 
 
