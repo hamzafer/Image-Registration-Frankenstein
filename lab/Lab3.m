@@ -131,3 +131,64 @@ fprintf('Automatic CP Euclidean error: %f\n', CP_Loc_error_euclidean);
 %E4) Discuss the evaluation metrics' values found, and determine if the result is acceptable
 %or not. Try to explain the differences found between the three evaluation
 %alternatives tested
+
+%% Experiment 2: Using Different Feature Detectors
+clear all;
+clc;
+
+% a) Load images
+im3ref = imread('im3_ref.jpg');
+im3sen = imread('im3_sen.jpg');
+
+% b) Select the red channel for this experiment
+fixed = im3ref(:,:,1); % Using red channel
+moving = im3sen(:,:,1);
+
+% c) Initialize detector type
+detectorType = 'KAZE'; % Change to 'ORB' or 'KAZE'
+
+% d) Feature detection and matching based on selected detector
+if strcmp(detectorType, 'ORB')
+    ptsRef  = detectORBFeatures(fixed);
+    ptsMov = detectORBFeatures(moving);
+elseif strcmp(detectorType, 'KAZE')
+    ptsRef  = detectKAZEFeatures(fixed);
+    ptsMov = detectKAZEFeatures(moving);
+end
+
+[featuresRef,  validPtsRef]  = extractFeatures(fixed, ptsRef);
+[featuresMov, validPtsMov] = extractFeatures(moving, ptsMov);
+
+% Matching features
+indexPairs = matchFeatures(featuresRef, featuresMov, 'Unique', true);
+matchedRef = validPtsRef(indexPairs(:,1));
+matchedMov = validPtsMov(indexPairs(:,2));
+
+% Show matched features
+figure;
+showMatchedFeatures(fixed, moving, matchedRef, matchedMov, 'montage');
+title([detectorType ' Matched Points']);
+
+% e) Estimate geometric transformation and register the images
+[tform, inlierMov, inlierRef] = estimateGeometricTransform(matchedMov, matchedRef, 'affine');
+
+% f) Apply transformation and display registered image
+registered = imwarp(moving, tform, 'OutputView', imref2d(size(fixed)));
+figure, imshowpair(fixed, registered, 'falsecolor');
+title([detectorType ' Registration Output']);
+
+% g) Compute Intensity-based Metric (RMSE)
+fixedPixels = fixed(:);
+registeredPixels = registered(:);
+
+% Calculate RMSE
+RMSE = sqrt(mean((double(fixedPixels) - double(registeredPixels)).^2));
+
+% Calculate Relative RMSE, assuming an 8-bit image (maximum value of RMSE = 255)
+relativeRMSE = RMSE / 255;
+
+% Print RMSE metrics
+fprintf('%s RMSE: %f\n', detectorType, RMSE);
+fprintf('%s Relative RMSE: %f\n', detectorType, relativeRMSE);
+
+
