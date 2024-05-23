@@ -321,7 +321,7 @@ fixed = im3ref(:,:,channel);
 moving = im3sen(:,:,channel);
 
 % c) Show the initial misalignment using imshowpair
-figure, imshowpair(fixed, moving, 'montage'), title('Initial Misalignment - Red Plane');
+figure, imshowpair(fixed, moving, 'montage'), title('Initial Misalignment - Blue Plane');
 
 % d) Feature detection and extraction
 ptsRef = detectSIFTFeatures(fixed);
@@ -331,7 +331,7 @@ ptsMov = detectSIFTFeatures(moving);
 [featuresMov, validPtsMov] = extractFeatures(moving, ptsMov);
 
 % e) Feature matching with adjusted MaxRatio to reduce false matches
-indexPairs = matchFeatures(featuresRef, featuresMov, 'Unique', true, 'MaxRatio', 0.6, 'MatchThreshold', 10.0, 'Metric', 'SAD');
+indexPairs = matchFeatures(featuresRef, featuresMov, 'Unique', true, 'MaxRatio', 0.5, 'MatchThreshold', 10.0);
 
 matchedRef = validPtsRef(indexPairs(:,1));
 matchedMov = validPtsMov(indexPairs(:,2));
