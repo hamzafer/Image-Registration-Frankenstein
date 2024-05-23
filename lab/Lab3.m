@@ -8,8 +8,9 @@ im3sen=imread('im3_sen.jpg');
 
 % b) Select one of the planes (for instance, the red plane, but you can try
 % which one works better)
-fixed=im3ref(:,:,1);
-moving=im3sen(:,:,1);
+channel = 1; % Change this value to 2 for green, 3 for blue to test different channels
+fixed = im3ref(:,:,channel);
+moving = im3sen(:,:,channel);
 
 % c) Show the initial misalignment problem using the imshowpair function
 figure, imshowpair(fixed, moving, 'montage'), title('Initial Misalignment - Red Plane');
