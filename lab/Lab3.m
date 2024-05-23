@@ -8,7 +8,7 @@ im3sen=imread('im3_sen.jpg');
 
 % b) Select one of the planes (for instance, the red plane, but you can try
 % which one works better)
-channel = 1; % Change this value to 2 for green, 3 for blue to test different channels
+channel = 3; % Change this value to 2 for green, 3 for blue to test different channels
 fixed = im3ref(:,:,channel);
 moving = im3sen(:,:,channel);
 
@@ -26,6 +26,7 @@ ptsmov = detectSIFTFeatures(moving);
 [featmov, validPtsmoving] = extractFeatures(moving, ptsmov);
 %%
 indexPairs = matchFeatures(featfixed, featmov,'Unique',true);
+%indexPairs = matchFeatures(featfixed, featmov, 'Unique', true, 'MaxRatio', 0.6, 'MatchThreshold', 10.0, 'Metric', 'SAD');
 
 %D2) Show the matched CP sets, selecting the valid points
 
@@ -54,11 +55,14 @@ title('Registration Output');
 pix_orig=fixed(:);
 pix_reg=moving_reg(:);
 
-%RMSE
-RMSE = sqrt((1/(-1+length(pix_orig)))*sum((pix_orig-pix_reg).^2));
+% Calculate the number of pixels
+n = length(pix_orig);  % Number of pixels
 
-%Relative RMSE, assuming an 8-bit image (maximum value of RMSE = 255)
-RMSE_rel=RMSE/255;
+% RMSE
+RMSE = sqrt(sum((double(pix_orig) - double(pix_reg)).^2) / n);
+
+% Relative RMSE, assuming an 8-bit image (maximum value of RMSE = 255)
+RMSE_rel = RMSE / 255;
 
 % Print RMSE metrics
 fprintf('RMSE: %f\n', RMSE);
@@ -243,3 +247,116 @@ relativeRMSE = RMSE / 255;
 % Print RMSE metrics
 fprintf('Affine RMSE: %f\n', RMSE);
 fprintf('Affine Relative RMSE: %f\n', relativeRMSE);
+
+%%
+%% Experiment 4: Grid of Control Points
+clear all;
+clc;
+
+% Load images
+im3ref = imread('im3_ref.jpg');
+im3sen = imread('im3_sen.jpg');
+
+% Select the red channel
+fixed = im3ref(:,:,1);
+moving = im3sen(:,:,1);
+
+% Detect features using a chosen method
+ptsRef = detectSIFTFeatures(fixed);
+ptsMov = detectSIFTFeatures(moving);
+
+% Match features
+[featuresRef, validPtsRef] = extractFeatures(fixed, ptsRef);
+[featuresMov, validPtsMov] = extractFeatures(moving, ptsMov);
+indexPairs = matchFeatures(featuresRef, featuresMov, 'Unique', true);
+
+matchedRef = validPtsRef(indexPairs(:,1));
+matchedMov = validPtsMov(indexPairs(:,2));
+
+% Estimate transformation using your chosen method
+tform = estimateGeometricTransform(matchedMov, matchedRef, 'projective');
+
+% Apply transformation
+registered = imwarp(moving, tform, 'OutputView', imref2d(size(fixed)));
+
+% Generate a grid of points across the fixed image
+gridSize = 50; % Size of the grid
+[xGrid, yGrid] = meshgrid(1:gridSize:size(fixed,2), 1:gridSize:size(fixed,1));
+gridPoints = [xGrid(:) yGrid(:)];
+
+% Transform grid points using the estimated transformation
+transformedGridPoints = transformPointsForward(tform, gridPoints);
+
+% Display original and transformed grid points on the images
+figure;
+imshow(fixed); hold on;
+plot(gridPoints(:,1), gridPoints(:,2), 'ro');
+title('Original Image with Grid Points');  % Title for the original image with grid
+
+figure;
+imshow(registered); hold on;
+plot(transformedGridPoints(:,1), transformedGridPoints(:,2), 'go');
+title('Registered Image with Transformed Grid Points');  % Title for the registered image with transformed grid
+
+% Calculate distances between original grid points and transformed grid points for evaluation
+distances = sqrt(sum((gridPoints - transformedGridPoints).^2, 2));
+meanGridPointError = mean(distances);
+maxGridPointError = max(distances);
+
+% Print grid point evaluation results
+fprintf('Mean Grid Point Error: %f pixels\n', meanGridPointError);
+fprintf('Max Grid Point Error: %f pixels\n', maxGridPointError);
+
+%% Case 3. HARD - Enhanced SIFT Registration
+clear all;
+clc;
+
+% a) Load images
+im3ref = imread('im3_ref.jpg');
+im3sen = imread('im3_sen.jpg');
+
+% b) Select one of the planes (red plane for this example)
+channel = 3; % Change this value to 2 for green, 3 for blue to test different channels
+fixed = im3ref(:,:,channel);
+moving = im3sen(:,:,channel);
+
+% c) Show the initial misalignment using imshowpair
+figure, imshowpair(fixed, moving, 'montage'), title('Initial Misalignment - Red Plane');
+
+% d) Feature detection and extraction
+ptsRef = detectSIFTFeatures(fixed);
+ptsMov = detectSIFTFeatures(moving);
+
+[featuresRef, validPtsRef] = extractFeatures(fixed, ptsRef);
+[featuresMov, validPtsMov] = extractFeatures(moving, ptsMov);
+
+% e) Feature matching with adjusted MaxRatio to reduce false matches
+indexPairs = matchFeatures(featuresRef, featuresMov, 'Unique', true, 'MaxRatio', 0.6, 'MatchThreshold', 10.0, 'Metric', 'SAD');
+
+matchedRef = validPtsRef(indexPairs(:,1));
+matchedMov = validPtsMov(indexPairs(:,2));
+
+% f) Show matched control points
+figure;
+showMatchedFeatures(fixed, moving, matchedRef, matchedMov, 'montage');
+title('Matched Points Before Registration');
+
+% g) Estimate geometric transformation using projective model
+[tform, inlierMov, inlierRef] = estimateGeometricTransform(matchedMov, matchedRef, 'projective');
+
+% h) Apply transformation and display registration output
+outputView = imref2d(size(fixed));
+registered = imwarp(moving, tform, 'OutputView', outputView);
+
+figure, imshowpair(fixed, registered, 'falsecolor');
+title('Registration Output');
+
+% i) Calculate intensity-based metrics (RMSE)
+pixOrig = fixed(:);
+pixReg = registered(:);
+RMSE = sqrt(mean((double(pixOrig) - double(pixReg)).^2));
+relativeRMSE = RMSE / 255;  % Assuming an 8-bit image scale
+
+% Print RMSE metrics
+fprintf('Enhanced SIFT RMSE: %f\n', RMSE);
+fprintf('Enhanced SIFT Relative RMSE: %f\n', relativeRMSE);
