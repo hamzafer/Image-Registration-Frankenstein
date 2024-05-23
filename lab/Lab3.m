@@ -125,7 +125,7 @@ title(ax, "Original and Registered CP locations")
 
 
 % Print CP automatic evaluation
-fprintf('SURF CP Euclidean error: %f\n', CP_Loc_error_euclidean);
+fprintf('Automatic CP Euclidean error: %f\n', CP_Loc_error_euclidean);
 
 %E4) Discuss the evaluation metrics' values found, and determine if the result is acceptable
 %or not. Try to explain the differences found between the three evaluation
