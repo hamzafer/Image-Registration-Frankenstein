@@ -248,7 +248,7 @@ relativeRMSE = RMSE / 255;
 fprintf('Affine RMSE: %f\n', RMSE);
 fprintf('Affine Relative RMSE: %f\n', relativeRMSE);
 
-%%
+
 %% Experiment 4: Grid of Control Points
 clear all;
 clc;
@@ -307,7 +307,7 @@ maxGridPointError = max(distances);
 fprintf('Mean Grid Point Error: %f pixels\n', meanGridPointError);
 fprintf('Max Grid Point Error: %f pixels\n', maxGridPointError);
 
-%% Case 3. HARD - Enhanced SIFT Registration
+%% Last Experiment: Enhanced SIFT Registration
 clear all;
 clc;
 

@@ -99,3 +99,12 @@ plot(matched_set_reg.Location(:,1),matched_set_reg.Location(:,2),'bx');
 legend(ax, ' Original', 'Registered');
 title(ax, "Original and Registered CP locations")
 
+%% Display and Print Metrics and Variables
+
+% Print the average Euclidean distance for manually selected control points
+disp('Average Euclidean Distance for Manually Selected Control Points:');
+disp(acc_projc4);
+
+% Print the average Euclidean distance for automatically extracted control points
+disp('Average Euclidean Distance for Automatically Extracted Control Points:');
+disp(CP_Loc_error_euclidean);
