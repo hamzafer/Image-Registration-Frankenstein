@@ -192,3 +192,54 @@ fprintf('%s RMSE: %f\n', detectorType, RMSE);
 fprintf('%s Relative RMSE: %f\n', detectorType, relativeRMSE);
 
 
+%% Experiment 3: Using Affine Transformations
+clear all;
+clc;
+
+% a) Load images
+im3ref = imread('im3_ref.jpg');
+im3sen = imread('im3_sen.jpg');
+
+% b) Select the red channel for this experiment
+fixed = im3ref(:,:,1);
+moving = im3sen(:,:,1);
+
+% c) Feature detection using SIFT as it is the best from what we have
+% experimented
+ptsRef  = detectSIFTFeatures(fixed);
+ptsMov = detectSIFTFeatures(moving);
+
+[featuresRef, validPtsRef]  = extractFeatures(fixed, ptsRef);
+[featuresMov, validPtsMov] = extractFeatures(moving, ptsMov);
+
+% Matching features
+indexPairs = matchFeatures(featuresRef, featuresMov, 'Unique', true);
+matchedRef = validPtsRef(indexPairs(:,1));
+matchedMov = validPtsMov(indexPairs(:,2));
+
+% Show matched features
+figure;
+showMatchedFeatures(fixed, moving, matchedRef, matchedMov, 'montage');
+title('Matched Points Using SIFT with Affine Transformation');
+
+% d) Estimate affine geometric transformation and apply it
+tformAffine = estimateGeometricTransform(matchedMov, matchedRef, 'affine');
+
+% Apply transformation and display registered image
+registeredAffine = imwarp(moving, tformAffine, 'OutputView', imref2d(size(fixed)));
+figure, imshowpair(fixed, registeredAffine, 'falsecolor');
+title('Affine Registration Output');
+
+% e) Calculate intensity-based metric (RMSE)
+fixedPixels = fixed(:);
+registeredAffinePixels = registeredAffine(:);
+
+% Calculate RMSE
+RMSE = sqrt(mean((double(fixedPixels) - double(registeredAffinePixels)).^2));
+
+% Calculate Relative RMSE, assuming an 8-bit image (maximum value of RMSE = 255)
+relativeRMSE = RMSE / 255;
+
+% Print RMSE metrics
+fprintf('Affine RMSE: %f\n', RMSE);
+fprintf('Affine Relative RMSE: %f\n', relativeRMSE);
