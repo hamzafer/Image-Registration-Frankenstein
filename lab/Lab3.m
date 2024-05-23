@@ -33,7 +33,8 @@ matchedmov= validPtsmoving(indexPairs(:,2));
 
 figure;
 showMatchedFeatures(fixed, moving, matchedfixed, matchedmov, 'montage');
-title('Putatively matched points (including outliers)');
+title('Matched Points Before Registration');
+
 %%
 % D3) Obtain the transformation from the matched CP sets
 [tform2, inliermov, inlierfixed] = estimateGeometricTransform(...
@@ -44,6 +45,7 @@ outputView = imref2d(size(fixed));
 moving_reg = imwarp(moving, tform2, 'OutputView', outputView);
 
 figure, imshowpair(fixed,moving_reg,'falsecolor');
+title('Registration Output');
 
 %%
 %e) How would you evaluate the quality? Can you use intensity-based
@@ -56,6 +58,10 @@ RMSE = sqrt((1/(-1+length(pix_orig)))*sum((pix_orig-pix_reg).^2));
 
 %Relative RMSE, assuming an 8-bit image (maximum value of RMSE = 255)
 RMSE_rel=RMSE/255;
+
+% Print RMSE metrics
+fprintf('RMSE: %f\n', RMSE);
+fprintf('Relative RMSE: %f\n', RMSE_rel);
 
 %%
 %e2) Discuss an alternative for evaluating the registration quality using manually extracted key points in both
@@ -75,10 +81,13 @@ hold on
 plot(fixedPoints(:,1), fixedPoints(:,2), 'ro');
 plot(movingPoints(:,1),movingPoints(:,2),'bx');
 legend(ax, ' Original', 'Registered');
-title(ax, "Original and Registered CP locations")
+title(ax, "Original and Registered Key Point Locations")
 
 diff = fixedPoints - movingPoints;
 acc_projc3= (1/(size(fixedPoints,1)-1))*sum(sqrt((diff(:,1).^2+diff(:,2).^2)));
+
+% Print CP manual evaluation
+fprintf('Manual CP Euclidean error: %f\n', acc_projc3);
 
 %%
 
@@ -114,6 +123,9 @@ plot(matched_set_reg.Location(:,1),matched_set_reg.Location(:,2),'bx');
 legend(ax, ' Original', 'Registered');
 title(ax, "Original and Registered CP locations")
 
+
+% Print CP automatic evaluation
+fprintf('SURF CP Euclidean error: %f\n', CP_Loc_error_euclidean);
 
 %E4) Discuss the evaluation metrics' values found, and determine if the result is acceptable
 %or not. Try to explain the differences found between the three evaluation
